@@ -2,12 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,
-      initial-scale=1.0,
-      maximum-scale=1.0,
-      user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>DARK_BLOCK</title>
 
 <style>
@@ -23,71 +18,60 @@ html,body{
     height:100%;
     overflow:hidden;
     background:#000;
-    font-family:Arial,Helvetica,sans-serif;
     touch-action:none;
+    font-family:Arial,sans-serif;
 }
 
-/* =========================
-   LOADING SCREEN
-========================= */
-
-#loadingScreen{
+#loading{
     position:fixed;
     inset:0;
     z-index:9999;
-    background:
-        radial-gradient(circle at 50% 35%,#253b52 0%,#0b1118 45%,#020305 100%);
     display:flex;
     flex-direction:column;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+    background:
+    radial-gradient(circle at center,#18354d,#05090d 65%,#000);
     color:white;
 }
 
-.loadingTitle{
-    font-size:clamp(42px,12vw,90px);
+.title{
+    font-size:clamp(42px,12vw,85px);
     font-weight:900;
     letter-spacing:6px;
-    text-shadow:
-        0 0 10px #00b7ff,
-        0 0 25px #006eff;
-    margin-bottom:12px;
+    text-shadow:0 0 12px #00aaff,0 0 30px #0066ff;
 }
 
-.loadingSubtitle{
-    color:#b9dfff;
-    font-size:15px;
+.subtitle{
+    margin-top:10px;
+    color:#b9eaff;
     letter-spacing:4px;
-    margin-bottom:35px;
+    font-size:12px;
 }
 
-.progressOuter{
+.bar{
     width:min(75vw,420px);
     height:14px;
-    border:2px solid rgba(255,255,255,.4);
+    margin-top:35px;
+    border:2px solid #ffffff88;
     border-radius:20px;
     overflow:hidden;
-    background:rgba(0,0,0,.4);
+    background:#0008;
 }
 
-#progressBar{
+#progress{
     width:0%;
     height:100%;
-    background:linear-gradient(90deg,#00aaff,#75eaff);
+    background:linear-gradient(90deg,#0099ff,#8beaff);
     box-shadow:0 0 15px #00aaff;
-    transition:width .2s linear;
 }
 
-#loadingText{
-    margin-top:14px;
-    color:#d8f5ff;
-    font-size:13px;
+#loadText{
+    margin-top:12px;
+    font-size:12px;
     letter-spacing:2px;
+    color:#d8f5ff;
 }
-
-/* =========================
-   GAME
-========================= */
 
 #game{
     position:fixed;
@@ -100,35 +84,30 @@ canvas{
     inset:0;
     width:100%;
     height:100%;
-    display:block;
 }
-
-/* =========================
-   CROSSHAIR
-========================= */
 
 #crosshair{
     position:absolute;
+    z-index:20;
     left:50%;
     top:50%;
     width:18px;
     height:18px;
     transform:translate(-50%,-50%);
     pointer-events:none;
-    z-index:20;
 }
 
 #crosshair:before,
 #crosshair:after{
     content:"";
     position:absolute;
-    background:rgba(255,255,255,.9);
+    background:white;
+    box-shadow:0 0 3px #000;
 }
 
 #crosshair:before{
     width:18px;
     height:2px;
-    left:0;
     top:8px;
 }
 
@@ -136,188 +115,144 @@ canvas{
     width:2px;
     height:18px;
     left:8px;
-    top:0;
 }
 
-/* =========================
-   TOP UI
-========================= */
-
-#topUI{
+#logo{
     position:absolute;
-    top:14px;
-    left:14px;
     z-index:30;
+    top:14px;
+    left:15px;
     color:white;
-    pointer-events:none;
-}
-
-.logo{
-    font-size:20px;
     font-weight:900;
+    font-size:20px;
     letter-spacing:2px;
     text-shadow:0 2px 5px #000;
 }
 
-.status{
-    margin-top:5px;
-    font-size:11px;
-    color:#d9e9ff;
-}
-
-/* =========================
-   HEALTH
-========================= */
-
-#healthBox{
+#info{
     position:absolute;
-    left:50%;
-    bottom:105px;
-    transform:translateX(-50%);
     z-index:30;
-    width:min(250px,55vw);
-    height:13px;
-    background:rgba(0,0,0,.55);
-    border:2px solid rgba(255,255,255,.7);
-    border-radius:8px;
-    overflow:hidden;
+    top:40px;
+    left:16px;
+    color:#d9edff;
+    font-size:10px;
 }
-
-#health{
-    width:100%;
-    height:100%;
-    background:#35d46b;
-}
-
-/* =========================
-   JOYSTICK
-========================= */
 
 #joystick{
     position:absolute;
-    left:25px;
+    z-index:50;
+    left:24px;
     bottom:25px;
     width:125px;
     height:125px;
     border-radius:50%;
-    background:rgba(255,255,255,.10);
-    border:2px solid rgba(255,255,255,.28);
-    z-index:50;
+    border:2px solid #ffffff44;
+    background:#ffffff12;
 }
 
 #stick{
     position:absolute;
-    width:55px;
-    height:55px;
+    width:56px;
+    height:56px;
     left:33px;
     top:33px;
     border-radius:50%;
-    background:rgba(255,255,255,.35);
-    border:2px solid rgba(255,255,255,.65);
-    box-shadow:0 0 15px rgba(0,170,255,.25);
+    border:2px solid #ffffff99;
+    background:#ffffff40;
 }
 
-/* =========================
-   RIGHT BUTTONS
-========================= */
-
-.controlButton{
+.button{
     position:absolute;
     z-index:50;
     width:62px;
     height:62px;
     border-radius:50%;
-    border:2px solid rgba(255,255,255,.35);
-    background:rgba(0,0,0,.35);
+    border:2px solid #ffffff55;
+    background:#0007;
     color:white;
-    font-weight:bold;
-    font-size:12px;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:bold;
     user-select:none;
 }
 
-.controlButton:active{
-    transform:scale(.92);
-    background:rgba(255,255,255,.2);
+.button:active{
+    transform:scale(.9);
+    background:#ffffff33;
 }
 
-#jumpButton{
-    right:30px;
+#jump{
+    right:28px;
     bottom:42px;
 }
 
-#shiftButton{
-    right:105px;
-    bottom:28px;
+#shift{
+    right:103px;
+    bottom:27px;
 }
 
-#actionButton{
-    right:30px;
-    bottom:120px;
-}
-
-#breakButton{
-    right:105px;
+#break{
+    right:103px;
     bottom:112px;
 }
 
-/* =========================
-   HOTBAR
-========================= */
+#place{
+    right:28px;
+    bottom:120px;
+}
 
 #hotbar{
     position:absolute;
-    left:50%;
-    bottom:20px;
-    transform:translateX(-50%);
     z-index:40;
+    left:50%;
+    bottom:18px;
+    transform:translateX(-50%);
     display:flex;
-    gap:5px;
+    gap:4px;
 }
 
 .slot{
-    width:48px;
-    height:48px;
-    border:2px solid rgba(255,255,255,.35);
-    background:rgba(0,0,0,.45);
+    width:46px;
+    height:46px;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+    border:2px solid #ffffff44;
+    background:#0009;
     color:white;
     font-size:20px;
 }
 
 .slot.selected{
     border:3px solid white;
-    box-shadow:0 0 10px rgba(255,255,255,.6);
+    box-shadow:0 0 10px #fff8;
 }
 
-/* =========================
-   DESKTOP MESSAGE
-========================= */
-
-#desktopHint{
+#health{
     position:absolute;
-    right:15px;
-    top:15px;
     z-index:30;
-    color:rgba(255,255,255,.75);
-    font-size:11px;
-    text-align:right;
-    pointer-events:none;
+    left:50%;
+    bottom:78px;
+    transform:translateX(-50%);
+    width:min(230px,50vw);
+    height:12px;
+    border:2px solid #fff9;
+    background:#0009;
+    border-radius:10px;
+    overflow:hidden;
 }
 
-/* Hide mobile controls on large desktop */
-@media(min-width:900px){
-    #joystick,
-    .controlButton{
-        opacity:.45;
-    }
+#healthBar{
+    width:100%;
+    height:100%;
+    background:#35d46b;
+}
 
-    #desktopHint{
-        display:block;
+@media(min-width:900px){
+    #joystick,.button{
+        opacity:.55;
     }
 }
 </style>
@@ -325,402 +260,273 @@ canvas{
 
 <body>
 
-<!-- =========================
-     LOADING SCREEN
-========================= -->
+<div id="loading">
+    <div class="title">DARK_BLOCK</div>
+    <div class="subtitle">BUILD • EXPLORE • SURVIVE</div>
 
-<div id="loadingScreen">
-
-    <div class="loadingTitle">
-        DARK_BLOCK
+    <div class="bar">
+        <div id="progress"></div>
     </div>
 
-    <div class="loadingSubtitle">
-        BUILD • EXPLORE • SURVIVE
-    </div>
-
-    <div class="progressOuter">
-        <div id="progressBar"></div>
-    </div>
-
-    <div id="loadingText">
-        Loading World...
-    </div>
-
+    <div id="loadText">Loading World...</div>
 </div>
-
-
-<!-- =========================
-     GAME
-========================= -->
 
 <div id="game">
 
-    <div id="topUI">
-        <div class="logo">DARK_BLOCK</div>
-        <div class="status">WORLD 01 • SURVIVAL</div>
-    </div>
-
-    <div id="desktopHint">
-        WASD = MOVE<br>
-        SHIFT = RUN<br>
-        SPACE = JUMP
-    </div>
+    <div id="logo">DARK_BLOCK</div>
+    <div id="info">WORLD 01 • SURVIVAL</div>
 
     <div id="crosshair"></div>
 
-    <!-- HEALTH -->
-    <div id="healthBox">
-        <div id="health"></div>
+    <div id="health">
+        <div id="healthBar"></div>
     </div>
 
-    <!-- JOYSTICK -->
     <div id="joystick">
         <div id="stick"></div>
     </div>
 
-    <!-- ACTION BUTTONS -->
-    <div id="actionButton"
-         class="controlButton">
-        USE
-    </div>
+    <div id="break" class="button">BREAK</div>
+    <div id="place" class="button">PLACE</div>
+    <div id="jump" class="button">JUMP</div>
+    <div id="shift" class="button">SHIFT</div>
 
-    <div id="breakButton"
-         class="controlButton">
-        BREAK
-    </div>
-
-    <div id="jumpButton"
-         class="controlButton">
-        JUMP
-    </div>
-
-    <div id="shiftButton"
-         class="controlButton">
-        SHIFT
-    </div>
-
-    <!-- HOTBAR -->
     <div id="hotbar">
-
-        <div class="slot selected">
-            🧱
-        </div>
-
-        <div class="slot">
-            🟫
-        </div>
-
-        <div class="slot">
-            ⬜
-        </div>
-
-        <div class="slot">
-            🪨
-        </div>
-
-        <div class="slot">
-            ❔
-        </div>
-
+        <div class="slot selected">🟩</div>
+        <div class="slot">🟫</div>
+        <div class="slot">⬜</div>
+        <div class="slot">🪨</div>
+        <div class="slot">🪵</div>
     </div>
 
 </div>
 
-
-<!-- THREE.JS -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
 
 <script>
 
-/* =====================================================
-   DARK_BLOCK
-   VERSION 0.1
-===================================================== */
+/* ==============================
+   LOADING
+============================== */
 
+const loading=document.getElementById("loading");
+const progress=document.getElementById("progress");
+const loadText=document.getElementById("loadText");
 
-/* =========================
-   LOADING SYSTEM
-========================= */
+let load=0;
 
-const loadingScreen =
-    document.getElementById("loadingScreen");
-
-const progressBar =
-    document.getElementById("progressBar");
-
-const loadingText =
-    document.getElementById("loadingText");
-
-const game =
-    document.getElementById("game");
-
-
-let progress = 0;
-
-const loadingMessages = [
+const messages=[
     "Loading World...",
     "Generating Blocks...",
     "Preparing Player...",
-    "Creating Sky...",
+    "Preparing Controls...",
     "Starting DARK_BLOCK..."
 ];
 
-const loadingInterval =
-setInterval(() => {
+const timer=setInterval(()=>{
 
-    progress += Math.floor(Math.random() * 8) + 4;
+    load+=Math.floor(Math.random()*9)+5;
 
-    if(progress > 100){
-        progress = 100;
-    }
+    if(load>100) load=100;
 
-    progressBar.style.width =
-        progress + "%";
+    progress.style.width=load+"%";
 
-    let index =
-        Math.min(
-            Math.floor(progress / 21),
-            loadingMessages.length - 1
-        );
+    const i=Math.min(
+        Math.floor(load/21),
+        messages.length-1
+    );
 
-    loadingText.textContent =
-        loadingMessages[index];
+    loadText.textContent=messages[i];
 
-    if(progress >= 100){
+    if(load>=100){
 
-        clearInterval(loadingInterval);
+        clearInterval(timer);
 
-        setTimeout(() => {
-
-            loadingScreen.style.display =
-                "none";
-
-            game.style.display =
-                "block";
-
+        setTimeout(()=>{
+            loading.style.display="none";
+            document.getElementById("game").style.display="block";
             startGame();
-
         },500);
     }
 
-},180);
+},160);
 
 
-/* =========================
-   THREE.JS VARIABLES
-========================= */
+/* ==============================
+   GAME VARIABLES
+============================== */
 
 let scene;
 let camera;
 let renderer;
-
 let player;
 
-let velocityY = 0;
+let velocityY=0;
+let grounded=true;
 
-let playerY = 1.7;
+let moveX=0;
+let moveZ=0;
+let running=false;
 
-let moveX = 0;
-let moveZ = 0;
+let yaw=0;
+let pitch=0;
 
-let running = false;
+const keys={};
 
-let canJump = true;
-
-
-/* =========================
-   WORLD
-========================= */
-
-const worldSize = 20;
-
-const blocks = [];
+const blocks=[];
 
 
-/* =========================
+/* ==============================
    MATERIALS
-========================= */
+============================== */
 
-const grassMaterial =
-new THREE.MeshLambertMaterial({
-    color:0x4d9b3c
+const grass=new THREE.MeshLambertMaterial({
+    color:0x55a83f
 });
 
-const dirtMaterial =
-new THREE.MeshLambertMaterial({
+const dirt=new THREE.MeshLambertMaterial({
     color:0x79512d
 });
 
-const stoneMaterial =
-new THREE.MeshLambertMaterial({
+const stone=new THREE.MeshLambertMaterial({
     color:0x777777
 });
 
 
-/* =========================
-   CREATE BLOCK
-========================= */
+/* ==============================
+   BLOCK
+============================== */
 
-function createBlock(
-    x,
-    y,
-    z,
-    material
-){
+function addBlock(x,y,z,material){
 
-    const geometry =
-        new THREE.BoxGeometry(
-            1,1,1
-        );
+    const geometry=
+        new THREE.BoxGeometry(1,1,1);
 
-    const block =
+    const block=
         new THREE.Mesh(
             geometry,
             material
         );
 
-    block.position.set(
-        x,
-        y,
-        z
-    );
+    block.position.set(x,y,z);
 
-    block.castShadow = true;
-    block.receiveShadow = true;
+    block.receiveShadow=true;
+    block.castShadow=true;
 
     scene.add(block);
 
     blocks.push(block);
-
-    return block;
 }
 
 
-/* =========================
-   CREATE WORLD
-========================= */
+/* ==============================
+   WORLD
+============================== */
 
 function createWorld(){
 
-    for(
-        let x = -worldSize;
-        x <= worldSize;
-        x++
-    ){
+    const size=18;
 
-        for(
-            let z = -worldSize;
-            z <= worldSize;
-            z++
-        ){
+    for(let x=-size;x<=size;x++){
 
-            /*
-             * Basic flat terrain.
-             * Later we will replace this
-             * with hills and procedural terrain.
-             */
+        for(let z=-size;z<=size;z++){
 
-            createBlock(
+            addBlock(
                 x,
                 0,
                 z,
-                grassMaterial
+                grass
             );
 
-            createBlock(
+            addBlock(
                 x,
                 -1,
                 z,
-                dirtMaterial
+                dirt
             );
 
-            createBlock(
+            addBlock(
                 x,
                 -2,
                 z,
-                stoneMaterial
+                stone
             );
         }
     }
 }
 
 
-/* =========================
+/* ==============================
    SKY
-========================= */
+============================== */
 
 function createSky(){
 
-    scene.background =
-        new THREE.Color(
-            0x78bff2
-        );
+    scene.background=
+        new THREE.Color(0x79c4f2);
 
-    scene.fog =
+    scene.fog=
         new THREE.Fog(
-            0x78bff2,
-            20,
-            80
+            0x79c4f2,
+            25,
+            75
         );
 }
 
 
-/* =========================
+/* ==============================
    LIGHT
-========================= */
+============================== */
 
 function createLights(){
 
-    const ambient =
+    const ambient=
         new THREE.AmbientLight(
             0xffffff,
-            1.1
+            1.15
         );
 
     scene.add(ambient);
 
-
-    const sun =
+    const sun=
         new THREE.DirectionalLight(
             0xffffff,
             1.8
         );
 
     sun.position.set(
-        20,
+        25,
         35,
-        10
+        15
     );
 
-    sun.castShadow = true;
+    sun.castShadow=true;
 
     scene.add(sun);
 }
 
 
-/* =========================
+/* ==============================
    PLAYER
-========================= */
+============================== */
 
 function createPlayer(){
 
-    player = new THREE.Object3D();
+    player=
+        new THREE.Object3D();
 
     player.position.set(
         0,
-        playerY,
-        5
+        1.7,
+        6
     );
 
     scene.add(player);
 
-
-    camera =
+    camera=
         new THREE.PerspectiveCamera(
             75,
-            window.innerWidth /
+            window.innerWidth/
             window.innerHeight,
             0.05,
             200
@@ -736,30 +542,26 @@ function createPlayer(){
 }
 
 
-/* =========================
-   START GAME
-========================= */
+/* ==============================
+   START
+============================== */
 
 function startGame(){
 
-    scene =
+    scene=
         new THREE.Scene();
 
     createSky();
-
     createLights();
-
     createWorld();
-
     createPlayer();
 
-
-    renderer =
+    renderer=
         new THREE.WebGLRenderer({
             antialias:true,
-            powerPreference:"high-performance"
+            powerPreference:
+                "high-performance"
         });
-
 
     renderer.setSize(
         window.innerWidth,
@@ -773,209 +575,157 @@ function startGame(){
         )
     );
 
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled=true;
 
-    game.insertBefore(
-        renderer.domElement,
-        game.firstChild
-    );
+    document
+        .getElementById("game")
+        .prepend(renderer.domElement);
 
-
-    setupControls();
-
+    setupKeyboard();
     setupJoystick();
-
     setupButtons();
+    setupCamera();
+
+    window.addEventListener(
+        "resize",
+        resize
+    );
 
     animate();
 }
 
 
-/* =========================
+/* ==============================
    KEYBOARD
-========================= */
+============================== */
 
-const keys = {};
-
-window.addEventListener(
-    "keydown",
-    function(e){
-
-        keys[e.code] = true;
-
-        if(e.code === "ShiftLeft" ||
-           e.code === "ShiftRight"){
-
-            running = true;
-        }
-
-        if(
-            e.code === "Space" &&
-            canJump
-        ){
-
-            velocityY = 0.18;
-
-            canJump = false;
-        }
-    }
-);
-
-
-window.addEventListener(
-    "keyup",
-    function(e){
-
-        keys[e.code] = false;
-
-        if(e.code === "ShiftLeft" ||
-           e.code === "ShiftRight"){
-
-            running = false;
-        }
-    }
-);
-
-
-/* =========================
-   CONTROLS
-========================= */
-
-function setupControls(){
-
-    document.addEventListener(
-        "touchmove",
-        function(e){
-            e.preventDefault();
-        },
-        {passive:false}
-    );
-
+function setupKeyboard(){
 
     window.addEventListener(
-        "resize",
-        function(){
+        "keydown",
+        e=>{
 
-            if(!camera || !renderer)
-                return;
+            keys[e.code]=true;
 
-            camera.aspect =
-                window.innerWidth /
-                window.innerHeight;
+            if(
+                e.code==="ShiftLeft" ||
+                e.code==="ShiftRight"
+            ){
+                running=true;
+            }
 
-            camera.updateProjectionMatrix();
+            if(
+                e.code==="Space" &&
+                grounded
+            ){
 
-            renderer.setSize(
-                window.innerWidth,
-                window.innerHeight
-            );
+                velocityY=.19;
+                grounded=false;
+            }
+        }
+    );
+
+    window.addEventListener(
+        "keyup",
+        e=>{
+
+            keys[e.code]=false;
+
+            if(
+                e.code==="ShiftLeft" ||
+                e.code==="ShiftRight"
+            ){
+                running=false;
+            }
         }
     );
 }
 
 
-/* =========================
+/* ==============================
    JOYSTICK
-========================= */
+============================== */
 
 function setupJoystick(){
 
-    const joystick =
+    const joystick=
         document.getElementById(
             "joystick"
         );
 
-    const stick =
+    const stick=
         document.getElementById(
             "stick"
         );
 
-    let active = false;
+    let active=false;
 
-    let centerX = 0;
-    let centerY = 0;
-
+    let centerX=0;
+    let centerY=0;
 
     function start(e){
 
-        active = true;
+        e.preventDefault();
 
-        const rect =
+        active=true;
+
+        const rect=
             joystick.getBoundingClientRect();
 
-        centerX =
-            rect.left +
-            rect.width / 2;
+        centerX=
+            rect.left+
+            rect.width/2;
 
-        centerY =
-            rect.top +
-            rect.height / 2;
+        centerY=
+            rect.top+
+            rect.height/2;
 
-        moveJoystick(e);
+        move(e);
     }
 
+    function move(e){
 
-    function moveJoystick(e){
+        if(!active)return;
 
-        if(!active)
-            return;
+        const t=e.touches[0];
 
-        const touch =
-            e.touches[0];
+        let dx=
+            t.clientX-centerX;
 
-        let dx =
-            touch.clientX -
-            centerX;
+        let dy=
+            t.clientY-centerY;
 
-        let dy =
-            touch.clientY -
-            centerY;
+        const max=35;
 
+        const distance=
+            Math.sqrt(dx*dx+dy*dy);
 
-        const maxDistance = 35;
+        if(distance>max){
 
-        const distance =
-            Math.sqrt(
-                dx * dx +
-                dy * dy
-            );
+            dx=
+                dx/distance*max;
 
-
-        if(distance > maxDistance){
-
-            dx =
-                dx / distance *
-                maxDistance;
-
-            dy =
-                dy / distance *
-                maxDistance;
+            dy=
+                dy/distance*max;
         }
 
-
-        stick.style.transform =
+        stick.style.transform=
             `translate(${dx}px,${dy}px)`;
 
-
-        moveX =
-            dx / maxDistance;
-
-        moveZ =
-            dy / maxDistance;
+        moveX=dx/max;
+        moveZ=dy/max;
     }
-
 
     function end(){
 
-        active = false;
+        active=false;
 
-        moveX = 0;
-        moveZ = 0;
+        moveX=0;
+        moveZ=0;
 
-        stick.style.transform =
-            "translate(0px,0px)";
+        stick.style.transform=
+            "translate(0,0)";
     }
-
 
     joystick.addEventListener(
         "touchstart",
@@ -985,7 +735,7 @@ function setupJoystick(){
 
     joystick.addEventListener(
         "touchmove",
-        moveJoystick,
+        move,
         {passive:false}
     );
 
@@ -996,140 +746,229 @@ function setupJoystick(){
 }
 
 
-/* =========================
+/* ==============================
    BUTTONS
-========================= */
+============================== */
 
 function setupButtons(){
 
-    const jump =
-        document.getElementById(
-            "jumpButton"
-        );
+    const jump=
+        document.getElementById("jump");
 
-    const shift =
-        document.getElementById(
-            "shiftButton"
-        );
-
+    const shift=
+        document.getElementById("shift");
 
     jump.addEventListener(
         "touchstart",
-        function(e){
+        e=>{
 
             e.preventDefault();
 
-            if(canJump){
+            if(grounded){
 
-                velocityY = 0.18;
-
-                canJump = false;
+                velocityY=.19;
+                grounded=false;
             }
-
         },
         {passive:false}
     );
-
 
     shift.addEventListener(
         "touchstart",
-        function(e){
+        e=>{
 
             e.preventDefault();
 
-            running = true;
-
+            running=true;
         },
         {passive:false}
     );
 
-
     shift.addEventListener(
         "touchend",
-        function(){
-
-            running = false;
-
+        ()=>{
+            running=false;
         }
     );
 }
 
 
-/* =========================
-   PLAYER MOVEMENT
-========================= */
+/* ==============================
+   CAMERA TOUCH
+============================== */
+
+function setupCamera(){
+
+    let touching=false;
+    let lastX=0;
+    let lastY=0;
+
+    document
+    .getElementById("game")
+    .addEventListener(
+        "touchstart",
+        e=>{
+
+            if(
+                e.target.closest(
+                    "#joystick,.button"
+                )
+            ){
+                return;
+            }
+
+            touching=true;
+
+            const t=e.touches[0];
+
+            lastX=t.clientX;
+            lastY=t.clientY;
+        },
+        {passive:false}
+    );
+
+    document
+    .getElementById("game")
+    .addEventListener(
+        "touchmove",
+        e=>{
+
+            if(!touching)return;
+
+            const t=e.touches[0];
+
+            const dx=
+                t.clientX-lastX;
+
+            const dy=
+                t.clientY-lastY;
+
+            lastX=t.clientX;
+            lastY=t.clientY;
+
+            yaw-=dx*.004;
+            pitch-=dy*.004;
+
+            const limit=1.45;
+
+            pitch=
+                Math.max(
+                    -limit,
+                    Math.min(
+                        limit,
+                        pitch
+                    )
+                );
+        },
+        {passive:false}
+    );
+
+    document
+    .getElementById("game")
+    .addEventListener(
+        "touchend",
+        ()=>{
+            touching=false;
+        }
+    );
+}
+
+
+/* ==============================
+   MOVEMENT
+============================== */
 
 function updatePlayer(){
 
-    if(!player)
-        return;
-
-
-    let forward = 0;
-    let side = 0;
-
+    let forward=0;
+    let side=0;
 
     if(keys["KeyW"])
-        forward = -1;
+        forward=1;
 
     if(keys["KeyS"])
-        forward = 1;
+        forward=-1;
 
     if(keys["KeyA"])
-        side = -1;
+        side=-1;
 
     if(keys["KeyD"])
-        side = 1;
+        side=1;
+
+    forward+=-moveZ;
+    side+=moveX;
+
+    const length=
+        Math.sqrt(
+            forward*forward+
+            side*side
+        );
+
+    if(length>1){
+
+        forward/=length;
+        side/=length;
+    }
+
+    const speed=
+        running?.14:.075;
+
+    const direction=
+        new THREE.Vector3(
+            0,
+            0,
+            1
+        );
+
+    direction.applyAxisAngle(
+        new THREE.Vector3(0,1,0),
+        yaw
+    );
+
+    const right=
+        new THREE.Vector3(
+            1,
+            0,
+            0
+        );
+
+    right.applyAxisAngle(
+        new THREE.Vector3(0,1,0),
+        yaw
+    );
+
+    player.position.addScaledVector(
+        direction,
+        forward*speed
+    );
+
+    player.position.addScaledVector(
+        right,
+        side*speed
+    );
 
 
-    forward += moveZ;
-    side += moveX;
+    /* gravity */
 
+    velocityY-=.009;
 
-    const speed =
-        running ? 0.14 : 0.075;
+    player.position.y+=velocityY;
 
+    if(player.position.y<=1.7){
 
-    /*
-     * Camera/player direction.
-     * For now movement follows world axes.
-     * Later we'll add full first-person
-     * mouse + touch camera rotation.
-     */
+        player.position.y=1.7;
 
-    player.position.z +=
-        forward * speed;
+        velocityY=0;
 
-    player.position.x +=
-        side * speed;
-
-
-    /* Gravity */
-
-    velocityY -= 0.009;
-
-    player.position.y +=
-        velocityY;
-
-
-    /* Ground collision */
-
-    if(player.position.y <= 1.7){
-
-        player.position.y = 1.7;
-
-        velocityY = 0;
-
-        canJump = true;
+        grounded=true;
     }
 
 
-    /* World boundary */
+    /* limits */
 
-    const limit =
-        worldSize - 1;
+    const limit=17;
 
-    player.position.x =
+    player.position.x=
         Math.max(
             -limit,
             Math.min(
@@ -1138,7 +977,7 @@ function updatePlayer(){
             )
         );
 
-    player.position.z =
+    player.position.z=
         Math.max(
             -limit,
             Math.min(
@@ -1149,9 +988,42 @@ function updatePlayer(){
 }
 
 
-/* =========================
+/* ==============================
+   CAMERA ROTATION
+============================== */
+
+function updateCamera(){
+
+    camera.rotation.order="YXZ";
+
+    camera.rotation.y=yaw;
+
+    camera.rotation.x=pitch;
+}
+
+
+/* ==============================
+   RESIZE
+============================== */
+
+function resize(){
+
+    camera.aspect=
+        window.innerWidth/
+        window.innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+    );
+}
+
+
+/* ==============================
    GAME LOOP
-========================= */
+============================== */
 
 function animate(){
 
@@ -1160,6 +1032,7 @@ function animate(){
     );
 
     updatePlayer();
+    updateCamera();
 
     renderer.render(
         scene,
@@ -1170,4 +1043,4 @@ function animate(){
 </script>
 
 </body>
-  </html>
+</html>
