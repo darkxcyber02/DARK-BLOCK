@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
+
+<title>DARK_BLOCK</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    font-family:Arial,Helvetica,sans-serif;
+    touch-action:none;
+}
+
+/* =========================
+   LOADING SCREEN
+========================= */
+
+#loadingScreen{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:
+        radial-gradient(circle at 50% 35%,#253b52 0%,#0b1118 45%,#020305 100%);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:white;
+}
+
+.loadingTitle{
+    font-size:clamp(42px,12vw,90px);
+    font-weight:900;
+    letter-spacing:6px;
+    text-shadow:
+        0 0 10px #00b7ff,
+        0 0 25px #006eff;
+    margin-bottom:12px;
+}
+
+.loadingSubtitle{
+    color:#b9dfff;
+    font-size:15px;
+    letter-spacing:4px;
+    margin-bottom:35px;
+}
+
+.progressOuter{
+    width:min(75vw,420px);
+    height:14px;
+    border:2px solid rgba(255,255,255,.4);
+    border-radius:20px;
+    overflow:hidden;
+    background:rgba(0,0,0,.4);
+}
+
+#progressBar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#00aaff,#75eaff);
+    box-shadow:0 0 15px #00aaff;
+    transition:width .2s linear;
+}
+
+#loadingText{
+    margin-top:14px;
+    color:#d8f5ff;
+    font-size:13px;
+    letter-spacing:2px;
+}
+
+/* =========================
+   GAME
+========================= */
+
+#game{
+    position:fixed;
+    inset:0;
+    display:none;
+}
+
+canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+/* =========================
+   CROSSHAIR
+========================= */
+
+#crosshair{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:18px;
+    height:18px;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    z-index:20;
+}
+
+#crosshair:before,
+#crosshair:after{
+    content:"";
+    position:absolute;
+    background:rgba(255,255,255,.9);
+}
+
+#crosshair:before{
+    width:18px;
+    height:2px;
+    left:0;
+    top:8px;
+}
+
+#crosshair:after{
+    width:2px;
+    height:18px;
+    left:8px;
+    top:0;
+}
+
+/* =========================
+   TOP UI
+========================= */
+
+#topUI{
+    position:absolute;
+    top:14px;
+    left:14px;
+    z-index:30;
+    color:white;
+    pointer-events:none;
+}
+
+.logo{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:2px;
+    text-shadow:0 2px 5px #000;
+}
+
+.status{
+    margin-top:5px;
+    font-size:11px;
+    color:#d9e9ff;
+}
+
+/* =========================
+   HEALTH
+========================= */
+
+#healthBox{
+    position:absolute;
+    left:50%;
+    bottom:105px;
+    transform:translateX(-50%);
+    z-index:30;
+    width:min(250px,55vw);
+    height:13px;
+    background:rgba(0,0,0,.55);
+    border:2px solid rgba(255,255,255,.7);
+    border-radius:8px;
+    overflow:hidden;
+}
+
+#health{
+    width:100%;
+    height:100%;
+    background:#35d46b;
+}
+
+/* =========================
+   JOYSTICK
+========================= */
+
+#joystick{
+    position:absolute;
+    left:25px;
+    bottom:25px;
+    width:125px;
+    height:125px;
+    border-radius:50%;
+    background:rgba(255,255,255,.10);
+    border:2px solid rgba(255,255,255,.28);
+    z-index:50;
+}
+
+#stick{
+    position:absolute;
+    width:55px;
+    height:55px;
+    left:33px;
+    top:33px;
+    border-radius:50%;
+    background:rgba(255,255,255,.35);
+    border:2px solid rgba(255,255,255,.65);
+    box-shadow:0 0 15px rgba(0,170,255,.25);
+}
+
+/* =========================
+   RIGHT BUTTONS
+========================= */
+
+.controlButton{
+    position:absolute;
+    z-index:50;
+    width:62px;
+    height:62px;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,.35);
+    background:rgba(0,0,0,.35);
+    color:white;
+    font-weight:bold;
+    font-size:12px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    user-select:none;
+}
+
+.controlButton:active{
+    transform:scale(.92);
+    background:rgba(255,255,255,.2);
+}
+
+#jumpButton{
+    right:30px;
+    bottom:42px;
+}
+
+#shiftButton{
+    right:105px;
+    bottom:28px;
+}
+
+#actionButton{
+    right:30px;
+    bottom:120px;
+}
+
+#breakButton{
+    right:105px;
+    bottom:112px;
+}
+
+/* =========================
+   HOTBAR
+========================= */
+
+#hotbar{
+    position:absolute;
+    left:50%;
+    bottom:20px;
+    transform:translateX(-50%);
+    z-index:40;
+    display:flex;
+    gap:5px;
+}
+
+.slot{
+    width:48px;
+    height:48px;
+    border:2px solid rgba(255,255,255,.35);
+    background:rgba(0,0,0,.45);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-size:20px;
+}
+
+.slot.selected{
+    border:3px solid white;
+    box-shadow:0 0 10px rgba(255,255,255,.6);
+}
+
+/* =========================
+   DESKTOP MESSAGE
+========================= */
+
+#desktopHint{
+    position:absolute;
+    right:15px;
+    top:15px;
+    z-index:30;
+    color:rgba(255,255,255,.75);
+    font-size:11px;
+    text-align:right;
+    pointer-events:none;
+}
+
+/* Hide mobile controls on large desktop */
+@media(min-width:900px){
+    #joystick,
+    .controlButton{
+        opacity:.45;
+    }
+
+    #desktopHint{
+        display:block;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOADING SCREEN
+========================= -->
+
+<div id="loadingScreen">
+
+    <div class="loadingTitle">
+        DARK_BLOCK
+    </div>
+
+    <div class="loadingSubtitle">
+        BUILD • EXPLORE • SURVIVE
+    </div>
+
+    <div class="progressOuter">
+        <div id="progressBar"></div>
+    </div>
+
+    <div id="loadingText">
+        Loading World...
+    </div>
+
+</div>
+
+
+<!-- =========================
+     GAME
+========================= -->
+
+<div id="game">
+
+    <div id="topUI">
+        <div class="logo">DARK_BLOCK</div>
+        <div class="status">WORLD 01 • SURVIVAL</div>
+    </div>
+
+    <div id="desktopHint">
+        WASD = MOVE<br>
+        SHIFT = RUN<br>
+        SPACE = JUMP
+    </div>
+
+    <div id="crosshair"></div>
+
+    <!-- HEALTH -->
+    <div id="healthBox">
+        <div id="health"></div>
+    </div>
+
+    <!-- JOYSTICK -->
+    <div id="joystick">
+        <div id="stick"></div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div id="actionButton"
+         class="controlButton">
+        USE
+    </div>
+
+    <div id="breakButton"
+         class="controlButton">
+        BREAK
+    </div>
+
+    <div id="jumpButton"
+         class="controlButton">
+        JUMP
+    </div>
+
+    <div id="shiftButton"
+         class="controlButton">
+        SHIFT
+    </div>
+
+    <!-- HOTBAR -->
+    <div id="hotbar">
+
+        <div class="slot selected">
+            🧱
+        </div>
+
+        <div class="slot">
+            🟫
+        </div>
+
+        <div class="slot">
+            ⬜
+        </div>
+
+        <div class="slot">
+            🪨
+        </div>
+
+        <div class="slot">
+            ❔
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- THREE.JS -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+
+<script>
+
+/* =====================================================
+   DARK_BLOCK
+   VERSION 0.1
+===================================================== */
+
+
+/* =========================
+   LOADING SYSTEM
+========================= */
+
+const loadingScreen =
+    document.getElementById("loadingScreen");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const loadingText =
+    document.getElementById("loadingText");
+
+const game =
+    document.getElementById("game");
+
+
+let progress = 0;
+
+const loadingMessages = [
+    "Loading World...",
+    "Generating Blocks...",
+    "Preparing Player...",
+    "Creating Sky...",
+    "Starting DARK_BLOCK..."
+];
+
+const loadingInterval =
+setInterval(() => {
+
+    progress += Math.floor(Math.random() * 8) + 4;
+
+    if(progress > 100){
+        progress = 100;
+    }
+
+    progressBar.style.width =
+        progress + "%";
+
+    let index =
+        Math.min(
+            Math.floor(progress / 21),
+            loadingMessages.length - 1
+        );
+
+    loadingText.textContent =
+        loadingMessages[index];
+
+    if(progress >= 100){
+
+        clearInterval(loadingInterval);
+
+        setTimeout(() => {
+
+            loadingScreen.style.display =
+                "none";
+
+            game.style.display =
+                "block";
+
+            startGame();
+
+        },500);
+    }
+
+},180);
+
+
+/* =========================
+   THREE.JS VARIABLES
+========================= */
+
+let scene;
+let camera;
+let renderer;
+
+let player;
+
+let velocityY = 0;
+
+let playerY = 1.7;
+
+let moveX = 0;
+let moveZ = 0;
+
+let running = false;
+
+let canJump = true;
+
+
+/* =========================
+   WORLD
+========================= */
+
+const worldSize = 20;
+
+const blocks = [];
+
+
+/* =========================
+   MATERIALS
+========================= */
+
+const grassMaterial =
+new THREE.MeshLambertMaterial({
+    color:0x4d9b3c
+});
+
+const dirtMaterial =
+new THREE.MeshLambertMaterial({
+    color:0x79512d
+});
+
+const stoneMaterial =
+new THREE.MeshLambertMaterial({
+    color:0x777777
+});
+
+
+/* =========================
+   CREATE BLOCK
+========================= */
+
+function createBlock(
+    x,
+    y,
+    z,
+    material
+){
+
+    const geometry =
+        new THREE.BoxGeometry(
+            1,1,1
+        );
+
+    const block =
+        new THREE.Mesh(
+            geometry,
+            material
+        );
+
+    block.position.set(
+        x,
+        y,
+        z
+    );
+
+    block.castShadow = true;
+    block.receiveShadow = true;
+
+    scene.add(block);
+
+    blocks.push(block);
+
+    return block;
+}
+
+
+/* =========================
+   CREATE WORLD
+========================= */
+
+function createWorld(){
+
+    for(
+        let x = -worldSize;
+        x <= worldSize;
+        x++
+    ){
+
+        for(
+            let z = -worldSize;
+            z <= worldSize;
+            z++
+        ){
+
+            /*
+             * Basic flat terrain.
+             * Later we will replace this
+             * with hills and procedural terrain.
+             */
+
+            createBlock(
+                x,
+                0,
+                z,
+                grassMaterial
+            );
+
+            createBlock(
+                x,
+                -1,
+                z,
+                dirtMaterial
+            );
+
+            createBlock(
+                x,
+                -2,
+                z,
+                stoneMaterial
+            );
+        }
+    }
+}
+
+
+/* =========================
+   SKY
+========================= */
+
+function createSky(){
+
+    scene.background =
+        new THREE.Color(
+            0x78bff2
+        );
+
+    scene.fog =
+        new THREE.Fog(
+            0x78bff2,
+            20,
+            80
+        );
+}
+
+
+/* =========================
+   LIGHT
+========================= */
+
+function createLights(){
+
+    const ambient =
+        new THREE.AmbientLight(
+            0xffffff,
+            1.1
+        );
+
+    scene.add(ambient);
+
+
+    const sun =
+        new THREE.DirectionalLight(
+            0xffffff,
+            1.8
+        );
+
+    sun.position.set(
+        20,
+        35,
+        10
+    );
+
+    sun.castShadow = true;
+
+    scene.add(sun);
+}
+
+
+/* =========================
+   PLAYER
+========================= */
+
+function createPlayer(){
+
+    player = new THREE.Object3D();
+
+    player.position.set(
+        0,
+        playerY,
+        5
+    );
+
+    scene.add(player);
+
+
+    camera =
+        new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth /
+            window.innerHeight,
+            0.05,
+            200
+        );
+
+    camera.position.set(
+        0,
+        0,
+        0
+    );
+
+    player.add(camera);
+}
+
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame(){
+
+    scene =
+        new THREE.Scene();
+
+    createSky();
+
+    createLights();
+
+    createWorld();
+
+    createPlayer();
+
+
+    renderer =
+        new THREE.WebGLRenderer({
+            antialias:true,
+            powerPreference:"high-performance"
+        });
+
+
+    renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+    );
+
+    renderer.setPixelRatio(
+        Math.min(
+            window.devicePixelRatio,
+            1.5
+        )
+    );
+
+    renderer.shadowMap.enabled = true;
+
+    game.insertBefore(
+        renderer.domElement,
+        game.firstChild
+    );
+
+
+    setupControls();
+
+    setupJoystick();
+
+    setupButtons();
+
+    animate();
+}
+
+
+/* =========================
+   KEYBOARD
+========================= */
+
+const keys = {};
+
+window.addEventListener(
+    "keydown",
+    function(e){
+
+        keys[e.code] = true;
+
+        if(e.code === "ShiftLeft" ||
+           e.code === "ShiftRight"){
+
+            running = true;
+        }
+
+        if(
+            e.code === "Space" &&
+            canJump
+        ){
+
+            velocityY = 0.18;
+
+            canJump = false;
+        }
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    function(e){
+
+        keys[e.code] = false;
+
+        if(e.code === "ShiftLeft" ||
+           e.code === "ShiftRight"){
+
+            running = false;
+        }
+    }
+);
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+function setupControls(){
+
+    document.addEventListener(
+        "touchmove",
+        function(e){
+            e.preventDefault();
+        },
+        {passive:false}
+    );
+
+
+    window.addEventListener(
+        "resize",
+        function(){
+
+            if(!camera || !renderer)
+                return;
+
+            camera.aspect =
+                window.innerWidth /
+                window.innerHeight;
+
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(
+                window.innerWidth,
+                window.innerHeight
+            );
+        }
+    );
+}
+
+
+/* =========================
+   JOYSTICK
+========================= */
+
+function setupJoystick(){
+
+    const joystick =
+        document.getElementById(
+            "joystick"
+        );
+
+    const stick =
+        document.getElementById(
+            "stick"
+        );
+
+    let active = false;
+
+    let centerX = 0;
+    let centerY = 0;
+
+
+    function start(e){
+
+        active = true;
+
+        const rect =
+            joystick.getBoundingClientRect();
+
+        centerX =
+            rect.left +
+            rect.width / 2;
+
+        centerY =
+            rect.top +
+            rect.height / 2;
+
+        moveJoystick(e);
+    }
+
+
+    function moveJoystick(e){
+
+        if(!active)
+            return;
+
+        const touch =
+            e.touches[0];
+
+        let dx =
+            touch.clientX -
+            centerX;
+
+        let dy =
+            touch.clientY -
+            centerY;
+
+
+        const maxDistance = 35;
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        if(distance > maxDistance){
+
+            dx =
+                dx / distance *
+                maxDistance;
+
+            dy =
+                dy / distance *
+                maxDistance;
+        }
+
+
+        stick.style.transform =
+            `translate(${dx}px,${dy}px)`;
+
+
+        moveX =
+            dx / maxDistance;
+
+        moveZ =
+            dy / maxDistance;
+    }
+
+
+    function end(){
+
+        active = false;
+
+        moveX = 0;
+        moveZ = 0;
+
+        stick.style.transform =
+            "translate(0px,0px)";
+    }
+
+
+    joystick.addEventListener(
+        "touchstart",
+        start,
+        {passive:false}
+    );
+
+    joystick.addEventListener(
+        "touchmove",
+        moveJoystick,
+        {passive:false}
+    );
+
+    joystick.addEventListener(
+        "touchend",
+        end
+    );
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+function setupButtons(){
+
+    const jump =
+        document.getElementById(
+            "jumpButton"
+        );
+
+    const shift =
+        document.getElementById(
+            "shiftButton"
+        );
+
+
+    jump.addEventListener(
+        "touchstart",
+        function(e){
+
+            e.preventDefault();
+
+            if(canJump){
+
+                velocityY = 0.18;
+
+                canJump = false;
+            }
+
+        },
+        {passive:false}
+    );
+
+
+    shift.addEventListener(
+        "touchstart",
+        function(e){
+
+            e.preventDefault();
+
+            running = true;
+
+        },
+        {passive:false}
+    );
+
+
+    shift.addEventListener(
+        "touchend",
+        function(){
+
+            running = false;
+
+        }
+    );
+}
+
+
+/* =========================
+   PLAYER MOVEMENT
+========================= */
+
+function updatePlayer(){
+
+    if(!player)
+        return;
+
+
+    let forward = 0;
+    let side = 0;
+
+
+    if(keys["KeyW"])
+        forward = -1;
+
+    if(keys["KeyS"])
+        forward = 1;
+
+    if(keys["KeyA"])
+        side = -1;
+
+    if(keys["KeyD"])
+        side = 1;
+
+
+    forward += moveZ;
+    side += moveX;
+
+
+    const speed =
+        running ? 0.14 : 0.075;
+
+
+    /*
+     * Camera/player direction.
+     * For now movement follows world axes.
+     * Later we'll add full first-person
+     * mouse + touch camera rotation.
+     */
+
+    player.position.z +=
+        forward * speed;
+
+    player.position.x +=
+        side * speed;
+
+
+    /* Gravity */
+
+    velocityY -= 0.009;
+
+    player.position.y +=
+        velocityY;
+
+
+    /* Ground collision */
+
+    if(player.position.y <= 1.7){
+
+        player.position.y = 1.7;
+
+        velocityY = 0;
+
+        canJump = true;
+    }
+
+
+    /* World boundary */
+
+    const limit =
+        worldSize - 1;
+
+    player.position.x =
+        Math.max(
+            -limit,
+            Math.min(
+                limit,
+                player.position.x
+            )
+        );
+
+    player.position.z =
+        Math.max(
+            -limit,
+            Math.min(
+                limit,
+                player.position.z
+            )
+        );
+}
+
+
+/* =========================
+   GAME LOOP
+========================= */
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+    updatePlayer();
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+</script>
+
+</body>
+  </html>
